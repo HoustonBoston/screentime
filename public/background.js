@@ -6,6 +6,21 @@ const api = typeof browser !== "undefined" ? browser : chrome;
 // Debug logging
 console.log("ScreenTime background script loaded");
 console.log("Using API:", typeof browser !== "undefined" ? "browser (Firefox)" : "chrome");
+console.log("Available APIs:", {
+  storage: !!api.storage,
+  tabs: !!api.tabs,
+  runtime: !!api.runtime,
+  idle: !!api.idle
+});
+
+// Check permissions in Firefox
+if (api.permissions) {
+  api.permissions.contains({
+    permissions: ['tabs', 'storage', 'activeTab']
+  }, (result) => {
+    console.log("Permissions check:", result);
+  });
+}
 
 const CHROME_URLS = [
   "chrome://about",
@@ -230,35 +245,59 @@ const storage = {
   },
 
   set(key, value) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const data = { [key]: value };
       api.storage.sync.set(data, () => {
-        resolve();
+        if (api.runtime.lastError) {
+          console.error("Storage sync set error:", api.runtime.lastError);
+          reject(api.runtime.lastError);
+        } else {
+          log(`Storage sync set successful: ${key}`);
+          resolve();
+        }
       });
     });
   },
 
   set_local(key, value) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const data = { [key]: value };
       api.storage.local.set(data, () => {
-        resolve();
+        if (api.runtime.lastError) {
+          console.error("Storage local set error:", api.runtime.lastError);
+          reject(api.runtime.lastError);
+        } else {
+          log(`Storage local set successful: ${key}`);
+          resolve();
+        }
       });
     });
   },
 
   get(key) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       api.storage.sync.get([key], (result) => {
-        resolve(result[key] || []);
+        if (api.runtime.lastError) {
+          console.error("Storage sync get error:", api.runtime.lastError);
+          reject(api.runtime.lastError);
+        } else {
+          log(`Storage sync get successful: ${key}, result:`, result[key]);
+          resolve(result[key] || []);
+        }
       });
     });
   },
 
   get_local(key) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       api.storage.local.get([key], (result) => {
-        resolve(result[key] || []);
+        if (api.runtime.lastError) {
+          console.error("Storage local get error:", api.runtime.lastError);
+          reject(api.runtime.lastError);
+        } else {
+          log(`Storage local get successful: ${key}, result:`, result[key]);
+          resolve(result[key] || []);
+        }
       });
     });
   },
@@ -266,6 +305,14 @@ const storage = {
 
 api.runtime.onInstalled.addListener(() => {
   console.log("Extension installed/updated - initializing storage");
+  
+  // Test storage immediately
+  storage.set_local("test_storage", "Firefox test").then(() => {
+    console.log("✅ Storage test successful");
+  }).catch(error => {
+    console.error("❌ Storage test failed:", error);
+  });
+  
   const currentdate = new Date();
   const startweek = new Date(currentdate);
   startweek.setDate(currentdate.getDate() - currentdate.getDay());
@@ -489,8 +536,14 @@ api.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 api.tabs.onActivated.addListener((activeInfo) => {
   log(`Tab activated: ${activeInfo.tabId}`);
   api.tabs.get(activeInfo.tabId, (tab) => {
+    if (api.runtime.lastError) {
+      console.error("Error getting tab info:", api.runtime.lastError);
+      return;
+    }
     log(`Got tab info: ${tab?.url}`);
-    updateCurrentTab(tab.id, tab);
+    updateCurrentTab(tab.id, tab).catch(error => {
+      console.error("Error in updateCurrentTab:", error);
+    });
   });
 });
 
