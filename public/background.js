@@ -528,7 +528,7 @@ if (api.idle && api.idle.onStateChanged) {
 
 api.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   log(`Tab updated: ${tabId}, status: ${changeInfo.status}, url: ${tab?.url}`);
-  if (changeInfo.status === 'complete') {
+  if (changeInfo.status === 'complete' || changeInfo.status === 'loading' || changeInfo.status === undefined) {
     updateCurrentTab(tabId, tab);
   }
 });
