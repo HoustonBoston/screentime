@@ -1,7 +1,7 @@
 ## ScreenTime
 [![chrome store logo](https://developer.chrome.com/static/docs/webstore/branding/image/UV4C4ybeBTsZt43U4xis.png)](https://chrome.google.com/webstore/detail/screentime/gachmghamoanlighmiebamagipmhdphl)
 
-ScreenTime for Chrome tracks your daily web activity and helps you manage distractions. The extension shows your browsing patterns through simple stats and graphs, and lets you block time-wasting sites when needed.
+ScreenTime for Chrome and Firefox tracks your daily web activity and helps you manage distractions. The extension shows your browsing patterns through simple stats and graphs, and lets you block time-wasting sites when needed.
 
 Features:
 - See your daily website usage
