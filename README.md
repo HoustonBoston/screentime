@@ -23,4 +23,5 @@ That's it - a simple tool to help you browse more mindfully.
 4. Submit a pull request
 
 ## To test
-1. Run 'npm run build && npm run export' if on Linux, or 'npm run build; npm run export' if on Windows.
+1. Run 'npm i' to install necessary dependencies.
+2. Run 'npm run build && npm run export' if on Linux, or 'npm run build; npm run export' if on Windows.
