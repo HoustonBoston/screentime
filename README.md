@@ -15,3 +15,12 @@ That's it - a simple tool to help you browse more mindfully.
     <img src="./public/chromestore/poster2.png" alt="poster 2" width="650"/>
     <img src="./public/chromestore/poster3.png" alt="poster 3" width="650"/>
 </p>
+
+## To contribute
+1. Fork the repo
+2. Create a new branch
+3. Commit and push the code
+4. Submit a pull request
+
+## To test
+1. Run 'npm run build && npm run export' if on Linux, or 'npm run build; npm run export' if on Windows.
