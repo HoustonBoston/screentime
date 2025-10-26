@@ -528,6 +528,7 @@ if (api.idle && api.idle.onStateChanged) {
 
 api.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   log(`Tab updated: ${tabId}, status: ${changeInfo.status}, url: ${tab?.url}`);
+  // I added changeInfo.status === undefined as well to this since upon loading of a page, the status wasn't changing for some reason.
   if (changeInfo.status === 'complete' || changeInfo.status === 'loading' || changeInfo.status === undefined) {
     updateCurrentTab(tabId, tab);
   }
