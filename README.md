@@ -29,3 +29,4 @@ That's it - a simple tool to help you browse more mindfully.
 ## To test
 1. Run 'npm i' to install necessary dependencies.
 2. Run 'npm run build && npm run export' if on Linux, or 'npm run build; npm run export' if on Windows.
+3. On Firefox, go type in 'about:debugging' on the address bar, select "This Firefox" on the left, then choose "Load temporary add-on," and then provide the manifest.json file.  
