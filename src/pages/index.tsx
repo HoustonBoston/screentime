@@ -56,7 +56,6 @@ export default function Home() {
       const newBlockedData = { ...blockedData };
       newBlockedData[website] = !newBlockedData[website];
       setBlockedData(newBlockedData);
-      console.log("Clicked on toggle. New blocked data:", newBlockedData)
 
       import("../../public/storage.js").then((storage) =>
         Promise.all([
@@ -80,12 +79,11 @@ export default function Home() {
                                 
                                 // If current tab matches the blocked website, close it
                                 if (currentHostname === website) {
-                                    console.log(`Closing tab for blocked site: ${website} with tab id ${currentTab.id}`);
                                     // close after a sec
                                     setTimeout(() => api.tabs.remove(currentTab.id), 1000);
                                 }
                             } catch (e) {
-                                console.log("Could not parse current tab URL:", e);
+                                throw e
                             }
                         }
                     });
